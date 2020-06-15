@@ -1,7 +1,7 @@
 import numpy as np
 
 
-SIZE = int(input("Input matrix size"))
+SIZE = 3
 A = np.array(np.random.uniform(0, 10, (SIZE, SIZE)))
 
 
@@ -25,19 +25,19 @@ def get_PU_LU(matrix):
     for i in range(SIZE):
         pivot_value = 0
         pivot_row = -1
+        temp = np.copy(C)
         for row in range(SIZE)[i:SIZE]:
             if np.fabs(C[row][i]) > pivot_value:
                 pivot_value = np.fabs(C[row][i])
                 pivot_row = row
-        if pivot_value != 0:
+        swap_rows(P, pivot_row, i)
+        swap_rows(C, pivot_row, i)
+        if not np.array_equal(temp, C):
             n += 1
-            swap_rows(P, pivot_row, i)
-            swap_rows(C, pivot_row, i)
-            for j in range(SIZE)[i + 1:SIZE]:
-                C[j][i] /= C[i][i]
-                for s in range(SIZE)[i + 1:SIZE]:
-                    C[j][s] -= C[j][i] * C[i][s]
-
+        for j in range(SIZE)[i + 1:SIZE]:
+            C[j][i] /= C[i][i]
+            for s in range(SIZE)[i + 1:SIZE]:
+                C[j][s] -= C[j][i] * C[i][s]
     L = np.tril(C, -1) + np.identity(SIZE)
     U = np.triu(C)
 
